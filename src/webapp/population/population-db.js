@@ -44,10 +44,11 @@ class PopulationDatabase {
   /**
    * Gets the population for a given key.
    * @param {string} key Key for the population row to fetch
-   * @returns {number\undefined} The population for this key, or undefined if
+   * @returns {number|undefined} The population for this key, or undefined if
    *    the value is not in the database.
    */
   async get(key) {
+    this.checkInitialized();
     const result = await this._getPopulation.get(key);
     if (!result) {
       return undefined;
@@ -67,6 +68,7 @@ class PopulationDatabase {
    * @param {number} population New value for this row
    */
   async update(key, population) {
+    this.checkInitialized();
     return this._updatePopulation.run(population, key);
   }
 
@@ -76,17 +78,25 @@ class PopulationDatabase {
    * @param {number} population Value for this row
    */
   async insert(key, population) {
+    this.checkInitialized();
     return this._insertPopulation.run(key, population);
   }
 
   /** @returns {number} Total number of rows in the population table  */
   async count() {
+    this.checkInitialized();
     const result = await this._countRows.get();
     const values = Object.values(result);
     if (!values.length) {
       return 0;
     } else {
       return values[0];
+    }
+  }
+
+  checkInitialized() {
+    if (!this._countRows) {
+      throw new Error('Database must be initialized before using it');
     }
   }
 }

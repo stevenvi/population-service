@@ -8,9 +8,9 @@
   },
   "scripts": {
     "start": "node src/index.js",
-    "test": "jest ./test",
-    "unit-test": "jest ./test/unit",
-    "integration-test": "jest ./test/integration"
+    "test": "jest --silent ./test",
+    "unit-test": "jest --silent ./test/unit",
+    "integration-test": "jest --silent ./test/integration"
   },
   "author": "Steven Wallace",
   "license": "ISC",

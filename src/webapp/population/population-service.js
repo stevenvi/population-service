@@ -20,7 +20,7 @@ async function init() {
   let dbCount = await db.count();
   if (!dbCount) {
     console.log('DB is empty, will populate from CSV. This will take a brief moment...');
-    const csv = fs.readFileSync('./data/city_populations.csv', 'utf-8')
+    fs.readFileSync('./data/city_populations.csv', 'utf-8')
         .split('\n')
         .filter(Boolean)
         .forEach(line => {
@@ -33,6 +33,7 @@ async function init() {
     console.log(`Read ${cache.size} city populations from CSV...`);
 
     cache.forEach(async (value, key) => {
+      // todo: bulk insert, this is really slow!
       await db.insert(key, value);
     });
     dbCount = await db.count();
@@ -48,12 +49,8 @@ async function init() {
  */
 function getKey(state, city) {
   // For now we're doing a simple concatenation. This is likely to be faster
-  // than generating a hash or doing any other trickery (state abbreviations, etc)
+  // than generating a hash or doing any other trickery
   return `${state},${city}`.toLowerCase();
-}
-
-function decomposeKey(key) {
-  return key.split(',');
 }
 
 // Marked as async to allow for the use of external data stores down the line
