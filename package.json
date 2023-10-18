@@ -4,13 +4,13 @@
   "description": "Service exposing a REST-based API for rapid polling of city populations",
   "main": "src/index.js",
   "engines": {
-    "node": "=18"
+    "node": "18"
   },
   "scripts": {
     "start": "node src/index.js",
-    "test": "jest --silent ./test",
-    "unit-test": "jest --silent ./test/unit",
-    "integration-test": "jest --silent ./test/integration"
+    "test": "jest --silent ./test/unit",
+    "integration-test": "jest ./test/integration",
+    "load-test": "jest -i ./test/load"
   },
   "author": "Steven Wallace",
   "license": "ISC",
@@ -20,6 +20,8 @@
     "lru-cache": "10.0.1"
   },
   "devDependencies": {
+    "axios": "1.5.1",
+    "uuid": "9.0.1",
     "jest": "29.7.0"
   }
 }

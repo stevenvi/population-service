@@ -12,6 +12,21 @@ const cacheOptions = {
 const cache = new LRUCache(cacheOptions);
 const db = new PopulationDatabase();
 
+function readDefaultData() {
+  return fs.readFileSync('./data/city_populations.csv', 'utf-8')
+      .split('\n')
+      .filter(Boolean)
+      .reduce((a, v) => {
+        const columns = v.split(',').map(str => str.trim());
+        const city = columns[0];
+        const state = columns[1];
+        const population = columns[2];
+        const key = getKey(state, city);
+        a[key] = population;
+        return a;
+      }, {});
+}
+
 async function init() {
   console.log(`Initializing population service`);
   await db.init();
@@ -20,16 +35,12 @@ async function init() {
   let dbCount = await db.count();
   if (!dbCount) {
     console.log('DB is empty, will populate from CSV. This will take a brief moment...');
-    fs.readFileSync('./data/city_populations.csv', 'utf-8')
-        .split('\n')
-        .filter(Boolean)
-        .forEach(line => {
-          const columns = line.split(',').map(str => str.trim());
-          const city = columns[0];
-          const state = columns[1];
-          const population = columns[2];
-          cache.set(getKey(state, city), population);
+    Object.entries(readDefaultData())
+        .forEach(entry => {
+          const [key, population] = entry;
+          cache.set(key, population);
         });
+
     console.log(`Read ${cache.size} city populations from CSV...`);
 
     cache.forEach(async (value, key) => {
@@ -89,7 +100,8 @@ async function setPopulation(state, city, value) {
 }
 
 module.exports = {
-  init,
   getPopulation,
-  setPopulation
+  init,
+  readDefaultData,
+  setPopulation,
 };

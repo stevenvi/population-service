@@ -17,13 +17,13 @@ function validateStateCity(state, city, res) {
 
 function validateAndParsePopulation(population, res) {
   // Validate body is numeric
-  if (isNaN(population)) {
+  const populationValue = parseInt(population);
+  if (isNaN(populationValue)) {
     res.status(BAD_REQUEST).send('Input must be numeric');
     return;
   }
 
   // Validate value is non-negative
-  const populationValue = parseInt(population);
   if (populationValue < 0) {
     res.status(BAD_REQUEST).send('Input must be greater than or equal to 0');
     return;
@@ -55,7 +55,8 @@ async function setPopulation(req, res) {
     return;
   }
   const population = validateAndParsePopulation(req.body, res);
-  if (population === undefined) {
+  if (population === undefined || population === null) {
+    res.status(BAD_REQUEST);
     return;
   }
 
