@@ -1,12 +1,12 @@
 # population-service
 
-A service making use of Express.js, sqlite3, and local caching to provide an API for city population values. Because this depends on a local database, it cannot be horizontally scaled.
+A demo service making use of Express.js, sqlite3, and local caching to provide an API for city population values. Because this depends on a local database, it cannot be horizontally scaled without special configuration. Config is hardcoded for convenience of development.
 
 ## Running
 This service requires Node 18. This can be installed with nvm:
 ```
-# nvm install 18
-# nvm use 18
+$ nvm install 18
+$ nvm use 18
 ```
 
 * `npm install` will fetch dependencies
