@@ -51,11 +51,10 @@ describe('getPopulation', () => {
 
 describe('setPopulation', () => {
   const state = 'virginia';
-  const city = 'virginia beach';
   const population = 555444;
 
   it('inserts a new value when it does not already exist in db', async () => {
-    const result = await PopulationService.setPopulation(state, city, population);
+    const result = await PopulationService.setPopulation(state, 'city1', population);
     expect(result?.created).toBe(true);
     expect(db.insert).toHaveBeenCalled();
     expect(db.update).not.toHaveBeenCalled();
@@ -63,7 +62,7 @@ describe('setPopulation', () => {
 
   it('does not update the db when the same value already exists', async () => {
     db.get.mockResolvedValue(population);
-    const result = await PopulationService.setPopulation(state, city, population);
+    const result = await PopulationService.setPopulation(state, 'city2', population);
     expect(result?.created).toBe(false);
     expect(db.insert).not.toHaveBeenCalled();
     expect(db.update).not.toHaveBeenCalled();
@@ -71,7 +70,7 @@ describe('setPopulation', () => {
 
   it('updates the db when a different value already exists', async () => {
     db.get.mockResolvedValue(population * 2);
-    const result = await PopulationService.setPopulation(state, city, population);
+    const result = await PopulationService.setPopulation(state, 'city3', population);
     expect(result?.created).toBe(false);
     expect(db.insert).not.toHaveBeenCalled();
     expect(db.update).toHaveBeenCalled();
