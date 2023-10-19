@@ -1,5 +1,4 @@
 const express = require('express');
-const { promisify } = require('util');
 const { getPopulation, setPopulation } = require('./endpoints');
 const PopulationService = require('./population/population-service');
 
@@ -21,7 +20,7 @@ async function init() {
   // opened. In a larger ecosystem we would likely have a common library for
   // managing this, but in this small example it is all self-contained by the
   // PopulationService above.
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     app.listen(PORT, () => {
       console.log(`Initializing webapp on port ${PORT}`);
       resolve();

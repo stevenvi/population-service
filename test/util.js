@@ -27,9 +27,9 @@ async function put(state, city, population) {
   try {
     const url = `${BASEURL}/api/population/state/${state}/city/${city}`;
     const result = (await axios.put(
-        url,
-        population?.toString(),
-        { headers: { 'Content-Type': 'text/plain' } },
+      url,
+      population?.toString(),
+      { headers: { 'Content-Type': 'text/plain' } },
     ));
     return { statusCode: result.status };
   } catch (e) {

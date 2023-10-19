@@ -15,5 +15,5 @@ describe('Tests the GET population enpdoint', () => {
     expect(result).toBeDefined();
     expect(result.population).toBeUndefined();
     expect(result.statusCode).toBe(400);
-  })
+  });
 });

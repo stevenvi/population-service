@@ -5,15 +5,15 @@ const newInitDb = async () => newDb().init();
 
 const DB_NOT_INITIALIZED = 'Database must be initialized';
 describe('count', () => {
-  it('Throws for uninitialized databases', async() => {
+  it('Throws for uninitialized databases', async () => {
     const db = newDb();
     await expect(async () => db.count()).rejects.toThrow(DB_NOT_INITIALIZED);
   });
 
-  it('counts correctly as data is added', async() => {
+  it('counts correctly as data is added', async () => {
     const db = await newInitDb();
     expect(await db.count()).toBe(0);
-    for (var i = 1; i < 1000; i++) {
+    for (let i = 1; i < 1000; i++) {
       await db.insert(`key${i}`, i);
       expect(await db.count()).toBe(i);
     }
@@ -21,18 +21,18 @@ describe('count', () => {
 });
 
 describe('get', () => {
-  it('throws for uninitialized databases', async() => {
+  it('throws for uninitialized databases', async () => {
     const db = newDb();
     await expect(async () => db.get('myKey')).rejects.toThrow(DB_NOT_INITIALIZED);
   });
 
-  it('returns undefined for invalid keys', async() => {
+  it('returns undefined for invalid keys', async () => {
     const db = await newInitDb();
     const value = await db.get('myKey');
     expect(value).toBeUndefined();
   });
 
-  it('returns expected value for valid keys', async() => {
+  it('returns expected value for valid keys', async () => {
     const db = await newInitDb();
     const key = 'myKey';
     const value = 10293847756;

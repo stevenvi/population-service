@@ -16,14 +16,14 @@ class PopulationDatabase {
     this._db = new Database(inMemoryOnly ? ':memory:' : DB_FILE);
   }
 
-  /** Initializes and creates the database and table as needed */
+  /** Initializes and creates the database and table as needed. Should be called before using any other class function */
   async init() {
     // Create population table if it does not already exist
     const checkIfTableExists = this._db.prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name='${TABLE_NAME}'`);
     let tableExists = await checkIfTableExists.get();
     if (tableExists === undefined) {
       // Table needs to be created
-      const createResult = await this._db.exec(`CREATE TABLE ${TABLE_NAME} (key text not null primary key, population int not null)`);
+      await this._db.exec(`CREATE TABLE ${TABLE_NAME} (key text not null primary key, population int not null)`);
 
       // Confirm it exists now
       tableExists = await checkIfTableExists.get();
@@ -66,6 +66,7 @@ class PopulationDatabase {
    * Updates a row in the population table. Throws if row does not exist.
    * @param {string} key Key for the row to be updated
    * @param {number} population New value for this row
+   * @returns {Promise<{ changes: number }>}
    */
   async update(key, population) {
     this.checkInitialized();
@@ -76,23 +77,26 @@ class PopulationDatabase {
    * Inserts a row into the population table. Throws on duplicate key error.
    * @param {string} key Key for this row
    * @param {number} population Value for this row
+   * @returns {Promise<{ changes: number }>}
    */
   async insert(key, population) {
     this.checkInitialized();
     return this._insertPopulation.run(key, population);
   }
 
+  /**
+   * Bulk inserts data into the db
+   * @param {object} obj key:value pairs for the population database
+   * @returns {Promise<*>}
+   */
   async insertMany(obj) {
     this.checkInitialized();
-    const txn = this._db.transaction((obj) => {
+    const txn = this._db.transaction(obj => {
       for (const [key, population] of Object.entries(obj)) {
         this._insertPopulation.run(key, population);
       }
     });
     return txn(obj);
-  }
-  async withTransaction(func) {
-    this._db.transaction(func);
   }
 
   /** @returns {number} Total number of rows in the population table  */
@@ -107,6 +111,7 @@ class PopulationDatabase {
     }
   }
 
+  /** @throws {Error} if the instance is not properly initialized */
   checkInitialized() {
     if (!this._countRows) {
       throw new Error('Database must be initialized before using it');

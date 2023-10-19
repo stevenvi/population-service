@@ -33,7 +33,7 @@ describe('getPopulation', () => {
   it('fetches from the db when value is not cached', async () => {
     const expectedValue = 12321;
     db.get.mockResolvedValue(expectedValue);
-    const value = await PopulationService.getPopulation('any','where');
+    const value = await PopulationService.getPopulation('any', 'where');
     expect(value).toBe(expectedValue);
   });
 

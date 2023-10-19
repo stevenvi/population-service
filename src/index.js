@@ -7,7 +7,4 @@
 const WebApp = require('./webapp');
 WebApp.init().then(() => {
   console.log('Population Service is ready to use');
-})
-
-
-// TODO: Should I add in a catch-all handler here? I don't personally mind node just crashing if I made a mistake...
+});
