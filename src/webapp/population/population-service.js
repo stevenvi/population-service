@@ -42,13 +42,14 @@ async function init() {
   // If db is empty, prepopulate it from csv and cache values locally
   let dbCount = await db.count();
   if (!dbCount) {
-    console.log('DB is empty, will populate from CSV. This will take a brief moment...');
+    console.log('Pre-warming cache...');
     Object.entries(defaultData)
       .forEach(entry => {
         const [key, population] = entry;
         cache.set(key, population);
       });
 
+    console.log('Creating DB from initial CSV data set...');
     await db.insertMany(defaultData);
     dbCount = await db.count();
     console.log(`Db has been populated with ${dbCount} entries`);

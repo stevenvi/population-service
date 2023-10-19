@@ -44,6 +44,8 @@ While a proper integration testing suite would be more appropriate for this sort
 ### Load Tests
 Again, a proper load testing suite would be more appropriate for this sort of thing, and a simple contrived load test is provided in the `test/load` directory. This can be run with `npm run load-test`. Note that this requires an instance of the server to already be running on the same host.
 
+Results will be skewed based on how data is cached. This is not a definitive performance measurement.
+
 Some results from load testing on different platforms:
 | CPU | OS | Read Rate | Write Rate | Mixed Rate |
 |-----|----|-----------|------------|------------|
