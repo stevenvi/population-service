@@ -14,6 +14,7 @@ class PopulationDatabase {
   constructor(inMemoryOnly = false) {
     // Connect to sqlite db
     this._db = new Database(inMemoryOnly ? ':memory:' : DB_FILE);
+    this._db.pragma('journal_mode = WAL');
   }
 
   /** Initializes and creates the database and table as needed. Should be called before using any other class function */
