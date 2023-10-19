@@ -37,12 +37,12 @@ function readDefaultData() {
 async function init() {
   console.log('Initializing population service');
   await db.init();
+  const defaultData = readDefaultData();
 
   // If db is empty, prepopulate it from csv and cache values locally
   let dbCount = await db.count();
   if (!dbCount) {
     console.log('DB is empty, will populate from CSV. This will take a brief moment...');
-    const defaultData = readDefaultData();
     Object.entries(defaultData)
       .forEach(entry => {
         const [key, population] = entry;
@@ -52,6 +52,18 @@ async function init() {
     await db.insertMany(defaultData);
     dbCount = await db.count();
     console.log(`Db has been populated with ${dbCount} entries`);
+  } else {
+    // Pre-warm the cache with known cities
+    // We are using the city names from the initial list because it should contain the majority of US cities already
+    console.log('Pre-warming cache...');
+    Object.entries(defaultData)
+      .forEach(entry => {
+        const key = entry[0];
+        const dbValue = db.get(key);
+        if (dbValue !== undefined) {
+          cache.set(key, dbValue);
+        }
+      });
   }
 }
 
@@ -100,7 +112,7 @@ async function getPopulation(state, city) {
 async function setPopulation(state, city, population) {
   const key = getKey(state, city);
 
-  const dbValue = await db.get(key);
+  const dbValue = await getPopulation(state, city);
   if (dbValue === population) {
     // No update is needed, just return immediately
     return { created: false };
