@@ -35,18 +35,14 @@ async function init() {
   let dbCount = await db.count();
   if (!dbCount) {
     console.log('DB is empty, will populate from CSV. This will take a brief moment...');
-    Object.entries(readDefaultData())
+    const defaultData = readDefaultData();
+    Object.entries(defaultData)
         .forEach(entry => {
           const [key, population] = entry;
           cache.set(key, population);
         });
 
-    console.log(`Read ${cache.size} city populations from CSV...`);
-
-    cache.forEach(async (value, key) => {
-      // todo: bulk insert, this is really slow!
-      await db.insert(key, value);
-    });
+    await db.insertMany(defaultData);
     dbCount = await db.count();
     console.log(`Db has been populated with ${dbCount} entries`);
   }

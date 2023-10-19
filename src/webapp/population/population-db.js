@@ -82,6 +82,19 @@ class PopulationDatabase {
     return this._insertPopulation.run(key, population);
   }
 
+  async insertMany(obj) {
+    this.checkInitialized();
+    const txn = this._db.transaction((obj) => {
+      for (const [key, population] of Object.entries(obj)) {
+        this._insertPopulation.run(key, population);
+      }
+    });
+    return txn(obj);
+  }
+  async withTransaction(func) {
+    this._db.transaction(func);
+  }
+
   /** @returns {number} Total number of rows in the population table  */
   async count() {
     this.checkInitialized();

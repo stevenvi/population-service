@@ -17,13 +17,15 @@ describe('init', () => {
   it('Populates an empty db', async () => {
     db.count.mockResolvedValue(0);
     await PopulationService.init();
-    expect(db.insert).toHaveBeenCalled();
+    expect(db.insert).not.toHaveBeenCalled();
+    expect(db.insertMany).toHaveBeenCalledTimes(1);
   });
 
   it('Does not populate a prepopulated db', async () => {
     db.count.mockResolvedValue(123);
     await PopulationService.init();
     expect(db.insert).not.toHaveBeenCalled();
+    expect(db.insertMany).not.toHaveBeenCalled();
   });
 });
 
