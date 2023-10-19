@@ -66,7 +66,7 @@ async function getPopulation(req, res) {
   if (population === undefined) {
     res.status(StatusCodes.BAD_REQUEST).send('Unknown city');
   } else {
-    res.status(StatusCodes.OK).json({ population });
+    res.status(StatusCodes.OK).send({ population });
   }
 }
 

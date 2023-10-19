@@ -44,13 +44,14 @@ While a proper integration testing suite would be more appropriate for this sort
 ### Load Tests
 Again, a proper load testing suite would be more appropriate for this sort of thing, and a simple contrived load test is provided in the `test/load` directory. This can be run with `npm run load-test`. Note that this requires an instance of the server to already be running on the same host.
 
-Results will be skewed based on how data is cached. This is not a definitive performance measurement.
+Performance was tested using an Apple M1 CPU with three REST frameworks: 
+[Express](https://expressjs.com/), 
+[restana](https://restana.21no.de/#/), and 
+[fastify](https://fastify.dev/).
 
-Some results from load testing on different platforms:
-| CPU | OS | Read Rate | Write Rate | Mixed Rate |
-|-----|----|-----------|------------|------------|
-| Apple M1 | MacOS 13 | 1502/s | 1511/s | 1457/s |
-| Intel(R) Core(TM) i5-13600K | Linux 6.1 | 4571/s | 4409/s | 4183/s |
-| Intel(R) Core(TM) i5-13600K | Windows 11 | 1886/s | 1903/s | 1904/s |
+Results for cached reads:
+* Express: 1502/s
+* restana: 1513/s
+* fastify: 1601/s
 
-The performance contrast between Windows and Linux is interesting but will not be investigated at this time.
+Given these results, the fastify branch will be promoted to main.

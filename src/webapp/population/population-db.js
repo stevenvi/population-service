@@ -100,7 +100,7 @@ class PopulationDatabase {
     return txn(obj);
   }
 
-  /** @returns {number} Total number of rows in the population table  */
+  /** @returns {Promise<number>} Total number of rows in the population table  */
   async count() {
     this.checkInitialized();
     const result = await this._countRows.get();
